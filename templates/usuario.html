@@ -1,0 +1,159 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<style>
+    /* Estilos generales */
+    .container {
+        max-width: 800px;
+        margin-top: 20px;
+    }
+
+    /* Encabezados */
+    h3 {
+        color: #000000;
+        font-weight: bold;
+        border-bottom: 2px solid #000000;
+        padding-bottom: 8px;
+    }
+
+    /* Card de información del usuario */
+    .card-body p {
+        font-size: 1.1em;
+    }
+
+    /* Imagen de perfil */
+    .img-fluid.rounded-circle {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border: 3px solid #000000;
+    }
+
+    .btn-primary {
+        padding: 10px 20px;
+        font-weight: bold;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+    
+    .btn-primary:hover {
+        transform: scale(1.05);
+        filter: brightness(1.1);
+    }
+
+    .btn-primary:active {
+        transform: scale(1);
+        filter: brightness(0.9);
+    }
+    
+    /* Cards */
+    .card {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+
+    /* Modal styling */
+    .modal-header, .modal-footer {
+        border: none;
+    }
+</style>
+
+<div class="container mt-4">
+    <h3>Perfil de Usuario</h3>
+    
+    <!-- Información del Usuario -->
+    <div class="row">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3>Información Personal</h3>
+                <div class="row">
+                    <div class="col-md-8">
+                        <p><strong>Nombre:</strong> Juan Pérez</p>
+                        <p><strong>Email:</strong> juan.perez@example.com</p>
+                        <p><strong>Fecha de nacimiento:</strong> 12 de marzo de 1995</p>
+                        <p><strong>Dirección:</strong> Av. Principal 123, Lima, Perú</p>
+                        <p><strong>Teléfono:</strong> +51 987654321</p>
+                    </div>
+                    <div class="col-md-4">
+                        <img src="../static/images/image.png" alt="Foto de perfil" class="img-fluid rounded-circle" style="width: 170px; height: 170px;">
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+
+    <!-- Configuración -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h3>Configuración</h3>
+            <p><strong>Notificaciones:</strong> Activadas</p>
+            <p><strong>Privacidad:</strong> Alta</p>
+            <p><strong>Modo oscuro:</strong> Activado</p>
+            <!-- Botón que abre el modal de edición de perfil -->
+            <button class="btn btn-primary" style="border-radius: 20px;" data-bs-toggle="modal" data-bs-target="#editProfileModal">Editar perfil</button>
+        </div>
+    </div>
+
+    <!-- Actividad Reciente -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h3>Actividad Reciente</h3>
+            <ul class="list-group">
+                <li class="list-group-item">Registrado el: 15 de enero de 2020</li>
+                <li class="list-group-item">Última actividad: 5 de noviembre de 2024</li>
+                <li class="list-group-item">Última modificación de perfil: 1 de noviembre de 2024</li>
+            </ul>
+        </div>
+
+        <div class="card-body">
+            <h4>Mensajes Recientes</h4>
+            <ul class="list-group">
+                <li class="list-group-item">"Hola Juan, ¿cómo estás?"</li>
+                <li class="list-group-item">"Tu pedido ha sido enviado." </li>
+                <li class="list-group-item">"Recuerda actualizar tu perfil." </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de edición de perfil -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Editar Perfil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="name" value="Juan Pérez">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" value="juan.perez@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="dob" class="form-label">Fecha de Nacimiento</label>
+                        <input type="date" class="form-control" id="dob" value="1995-03-12">
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="address" value="Av. Principal 123, Lima, Perú">
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Teléfono</label>
+                        <input type="tel" class="form-control" id="phone" value="+51 987654321">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success">Guardar cambios</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Incluir el script de Bootstrap al final -->
+{% endblock %}

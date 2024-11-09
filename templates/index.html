@@ -1,0 +1,168 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <!-- Columna del Mapa -->
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow p-0" style="height: 70vh;">
+            <iframe src="{{ url_for('mapa') }}" id="map-frame" style="width: 100%; height: 100%; border: none;"></iframe>
+        </div>
+    </div>
+
+    <!-- Columna del Chat -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <div class="chat-container">
+                    <div class="chat-header d-flex align-items-center p-3">
+                        <img src="{{ url_for('static', filename='images/logodechat.png') }}" alt="El Chat" class="chat-logo">
+                        <span class="ml-3" style="font-size: 18px;">WHAT ACTIVITIES DO YOU WANT TO DO?</span>
+                    </div>
+                    <div class="chat-box" id="chat-box"></div>
+
+                    <form method="POST" id="chat-form" class="chat-form">
+                        <div class="input-group">
+                            <textarea class="form-control" placeholder="Escribe tu mensaje..." id="mensaje" name="mensaje" required></textarea>
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-primary">Enviar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('chat-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const userMessage = document.getElementById('mensaje').value;
+        const chatBox = document.getElementById('chat-box');
+
+        const userMessageElement = document.createElement('div');
+        userMessageElement.classList.add('user-message');
+        userMessageElement.textContent = userMessage;
+        chatBox.appendChild(userMessageElement);
+
+        const botMessageElement = document.createElement('div');
+        botMessageElement.classList.add('bot-message');
+
+        if (/arequipa|arequjpa|arequioa|arequuipa|arekipaa|arequppa/i.test(userMessage)) {
+            const card1 = `
+                <div class="card mb-3">
+                    <img src="{{ url_for('static', filename='../static/images/sillar.jpg') }}" class="card-img-top" alt="Construcción de Sillar">
+                    <div class="card-body">
+                        <h5 class="card-title">Construcción de Sillar</h5>
+                        <p class="card-text">Vive la experiencia de trabajar el sillar con expertos artesanos. Aprende sobre su historia y técnicas.</p>
+                        <p class="card-text"><strong>Ofrecido por:</strong> Juan Perez</p>
+                        <p class="card-text"><strong>Precio:</strong> $50 por persona</p>
+                        <button class="btn btn-primary" onclick="openModal('Construcción de Sillar', 'Vive la experiencia de trabajar el sillar con expertos artesanos. Aprende sobre su historia y técnicas.')">Go</button>
+                        <a href="https://www.youtube.com/watch?v=KOtWJQJpF2I">Ver en YouTube</a>
+                    </div>
+                </div>
+            `;
+
+            const card2 = `
+                <div class="card mb-3">
+                    <img src="{{ url_for('static', filename='../static/images/picante.jpg') }}" class="card-img-top" alt="Preparación de Picante Arequipeño">
+                    <div class="card-body">
+                        <h5 class="card-title">Preparación de Picante Arequipeño</h5>
+                        <p class="card-text">Participa en la preparación de este famoso plato tradicional y degusta auténticos sabores arequipeños.</p>
+                        <p class="card-text"><strong>Ofrecido por:</strong> Ana Morales</p>
+                        <p class="card-text"><strong>Precio:</strong> $35 por persona</p>
+                        <button class="btn btn-primary" onclick="openModal('Preparación de Picante Arequipeño', 'Participa en la preparación de este famoso plato tradicional y degusta auténticos sabores arequipeños.')">Go</button>
+                        <a href="https://www.youtube.com/watch?v=FRrM9y_sz3w">Ver en YouTube</a>
+                    </div>
+                </div>
+            `;
+
+            botMessageElement.innerHTML = card1 + card2;
+
+        } else if (/tejer/i.test(userMessage)) {
+            const card1 = `
+                <div class="card mb-3">
+                    <img src="{{ url_for('static', filename='../static/images/tejido1.jpg') }}" class="card-img-top" alt="Tejido de Gorros Andinos">
+                    <div class="card-body">
+                        <h5 class="card-title">Tejido de Gorros Andinos</h5>
+                        <p class="card-text">Aprende a tejer gorros tradicionales con la técnica andina junto a artesanos locales.</p>
+                        <p class="card-text"><strong>Ofrecido por:</strong> Carlos Ramirez</p>
+                        <p class="card-text"><strong>Precio:</strong> $20 por persona</p>
+                        <button class="btn btn-primary" onclick="openModal('Tejido de Gorros Andinos', 'Aprende a tejer gorros tradicionales con la técnica andina junto a artesanos locales.')">Go</button>
+                        <a href="https://www.youtube.com/watch?v=IvFOoo_yCe0">Ver en YouTube</a>
+                    </div>
+                </div>
+            `;
+
+            const card2 = `
+                <div class="card mb-3">
+                    <img src="{{ url_for('static', filename='../static/images/tejido2.jpg') }}" class="card-img-top" alt="Tejido de Chalinas">
+                    <div class="card-body">
+                        <h5 class="card-title">Tejido de Chalinas</h5>
+                        <p class="card-text">Sumérgete en el arte de tejer chalinas con lana natural y patrones únicos.</p>
+                        <p class="card-text"><strong>Ofrecido por:</strong> Maria Lopez</p>
+                        <p class="card-text"><strong>Precio:</strong> $25 por persona</p>
+                        <button class="btn btn-primary" onclick="openModal('Tejido de Chalinas', 'Sumérgete en el arte de tejer chalinas con lana natural y patrones únicos.')">Go</button>
+                        <a href="https://www.youtube.com/watch?v=HBhmeQrySaY">Ver en YouTube</a>
+                    </div>
+                </div>
+            `;
+
+            botMessageElement.innerHTML = card1 + card2;
+        } else {
+            botMessageElement.textContent = "Lo siento, no entiendo esa solicitud. ¿Puedes intentar otra vez?";
+        }
+
+        chatBox.appendChild(botMessageElement);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        document.getElementById('mensaje').value = '';
+    });
+
+    function openModal(title, content) {
+        const modal = document.createElement('div');
+        modal.classList.add('modal');
+        modal.innerHTML = `
+            <div class="modal-content">
+                <span class="close-button" onclick="closeModal()">&times;</span>
+                <h5>${title}</h5>
+                <p>${content}</p>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+
+    function closeModal() {
+        const modal = document.querySelector('.modal');
+        if (modal) modal.remove();
+    }
+</script>
+
+<style>
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        position: relative;
+        max-width: 400px;
+        width: 100%;
+    }
+    .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        font-size: 20px;
+    }
+</style>
+{% endblock %}

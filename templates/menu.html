@@ -1,0 +1,287 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<style>
+    .btn-primary, .btn-secondary, .btn-info, .btn-success {
+        padding: 10px 20px;
+        font-weight: bold;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+    
+    .btn-primary:hover, .btn-secondary:hover, .btn-info:hover, .btn-success:hover {
+        transform: scale(1.05);
+        filter: brightness(1.1);
+    }
+
+    .btn-primary:active, .btn-secondary:active, .btn-info:active, .btn-success:active {
+        transform: scale(1);
+        filter: brightness(0.9);
+    }
+
+    .shadow-sm {
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script>
+    // Escucha el evento de apertura del modal de detalle de reseña
+    $('#detalleReseñaModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Elemento que activó el modal
+        var reseñaId = button.data('id'); // Obtenemos el ID de la reseña seleccionada
+        var reseñas = {
+            1: {
+                descripcion: 'Fue una experiencia increíble, totalmente recomendada. El guía fue muy profesional y conocedor del lugar.',
+                contacto: 'Juan Pérez - Teléfono: 987654321',
+                puntuacion: 5,
+                fecha: '2024-11-05',
+                comentario: 'Totalmente recomendable, una aventura única.'
+            },
+            2: {
+                descripcion: 'Muy buena actividad, aunque la ruta podría mejorar. El guía fue muy amable y atento.',
+                contacto: 'María López - Teléfono: 123456789',
+                puntuacion: 4,
+                fecha: '2024-10-25',
+                comentario: 'La actividad fue interesante, pero podría mejorarse.'
+            }
+        };
+
+        // Cargar los detalles de la reseña en los campos correspondientes
+        var detalle = reseñas[reseñaId];
+        $('#descripcion-vivencia').text(detalle.descripcion);
+        $('#contacto').text(detalle.contacto);
+        $('#puntuacion').text('⭐'.repeat(detalle.puntuacion)); // Muestra las estrellas según la puntuación
+        $('#fecha').text(detalle.fecha);
+        $('#comentario').text(detalle.comentario);
+    });
+
+    // Simulación del formulario de agregar servicio
+    $('#formTurismoModal form').submit(function(event) {
+        event.preventDefault();  // Evita el envío del formulario por defecto
+
+        // Simulación de que el servicio se subió con éxito
+        $('#mensajeExito').show();  // Muestra el mensaje de éxito
+        setTimeout(function() {
+            $('#mensajeExito').hide();  // Oculta el mensaje después de 3 segundos
+        }, 3000);
+    });
+    document.querySelectorAll('#estrellas .star').forEach(star => {
+        star.addEventListener('click', function() {
+            let value = this.getAttribute('data-value');
+            document.getElementById('puntuacion').value = value;
+
+            // Cambiar color de estrellas según la puntuación seleccionada
+            document.querySelectorAll('#estrellas .star').forEach(s => {
+                s.style.color = s.getAttribute('data-value') <= value ? 'gold' : 'gray';
+            });
+        });
+    });
+
+    // Simulación del envío de la reseña
+    document.getElementById('formReseña').addEventListener('submit', function(event) {
+        event.preventDefault();  // Evita el envío del formulario real
+
+        // Mostrar mensaje de éxito
+        document.getElementById('mensajeExitoReseña').style.display = 'block';
+        setTimeout(function() {
+            document.getElementById('mensajeExitoReseña').style.display = 'none';
+            $('#escribirReseñaModal').modal('hide');  // Cierra el modal
+        }, 3000);
+    });
+</script>
+
+<div class="container mt-4">
+    <h3><b>Portal de Turismo Vivencial en Perú</b></h3>
+    <div class="row">
+        <div class="col-md-7">
+            <p><br>Explora y ofrece experiencias auténticas de turismo vivencial en Perú. Aquí podrás encontrar opciones de actividades culturales, visitas guiadas, y mucho más en diversas regiones del país.<br> Además, si eres un guía o anfitrión local, puedes agregar tus servicios para conectar con viajeros interesados en conocer Perú desde una perspectiva única.</p>
+        </div>
+        <div class="col-md-4">
+            <img src="../static/images/turismo-vivencial.png" alt="Turismo Vivencial" class="img-fluid" style="border-radius: 8px;width: 450px; height: 200px;" >
+        </div>
+    </div>
+    <div class="row">
+        <!-- Carta para ofrecer servicio de turismo vivencial -->
+        <div class="col-md-4" style="background-color:#bbf7d040;">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title"><b>Ofrecer Servicio de Turismo Vivencial</b></h5>
+                    <p class="card-text">Proporcione información para ofrecer su servicio de turismo vivencial en distintas regiones de Perú.</p>
+                    <button class="btn btn-primary rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#formTurismoModal">
+                        Agregar Servicio&nbsp;
+                        <img src="../static/images/plus-solid.svg" alt="Enviar" style="width: 20px; height: 20px;">
+                    </button>
+                    <div id="mensajeExito" class="alert alert-success mt-2" style="display:none;">
+                        ¡Servicio agregado con éxito!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carta para reseñas -->
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title"><b>Reseñas de Turismo Vivencial</b></h5>
+                    <p class="card-text">Consulta las reseñas de los usuarios sobre las actividades de turismo vivencial en Perú.</p>
+                    <!-- Botón que abre el modal de reseñas -->
+                    <button class="btn btn-secondary rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#reseñasModal">
+                        Ver Reseñas
+                        <img src="../static/images/eye-regular.svg" alt="Enviar" style="width: 20px; height: 20px;">
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carta adicional: Información sobre el turismo en Perú -->
+        <!-- Carta adicional: Escribir una reseña -->
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title"><b>Escribir una Reseña</b></h5>
+                    <p class="card-text">Comparte tu experiencia de turismo vivencial en Perú. Ayuda a otros viajeros a conocer las actividades más recomendadas y lo que pueden esperar.</p>
+                    <button class="btn btn-info rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#escribirReseñaModal">
+                        Escribir Reseña
+                        <img src="../static/images/pen-solid.svg" alt="Enviar" style="width: 20px; height: 20px;">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de formulario para agregar servicio de turismo vivencial -->
+<div class="modal fade" id="formTurismoModal" tabindex="-1" aria-labelledby="formTurismoModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="formTurismoModalLabel">Agregar Servicio de Turismo Vivencial</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form method="GET">
+            <div class="mb-3">
+                <label for="region" class="form-label">Región</label>
+                <input type="text" class="form-control" id="region" name="region" required>
+            </div>
+            <div class="mb-3">
+                <label for="provincia" class="form-label">Provincia</label>
+                <input type="text" class="form-control" id="provincia" name="provincia" required>
+            </div>
+            <div class="mb-3">
+                <label for="distrito" class="form-label">Distrito</label>
+                <input type="text" class="form-control" id="distrito" name="distrito" required>
+            </div>
+            <div class="mb-3">
+                <label for="nombre_guia" class="form-label">Nombre del Guía</label>
+                <input type="text" class="form-control" id="nombre_guia" name="nombre_guia" required>
+            </div>
+            <div class="mb-3">
+                <label for="actividad_vivencial" class="form-label">Actividad Vivencial</label>
+                <input type="text" class="form-control" id="actividad_vivencial" name="actividad_vivencial" required>
+            </div>
+            <div class="mb-3">
+                <label for="descripcion" class="form-label">Descripción de la Actividad</label>
+                <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="telefono" class="form-label">Teléfono de Contacto</label>
+                <input type="text" class="form-control" id="telefono" name="telefono" required>
+            </div>
+            <div class="mb-3">
+                <label for="precio" class="form-label">Precio</label>
+                <input type="text" class="form-control" id="precio" name="precio" required>
+            </div>
+            <button type="submit" class="btn btn-success rounded-pill shadow-sm">Enviar Reseña</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para ver las reseñas -->
+<div class="modal fade" id="reseñasModal" tabindex="-1" aria-labelledby="reseñasModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reseñasModalLabel">Reseñas de Usuarios</h5>
+                <!-- Botón de cierre -->
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Lista de reseñas -->
+                <ul class="list-group">
+                    <!-- Ejemplo de reseña -->
+                    <li class="list-group-item" data-bs-toggle="modal" data-bs-target="#detalleReseñaModal" data-id="1">
+                        <h6>Guía: Juan Pérez</h6>
+                        <p>Puntuación: <span class="stars">⭐⭐⭐⭐⭐</span></p>
+                        <p>Comentario: "Fue una experiencia increíble, totalmente recomendada."</p>
+                    </li>
+                    <li class="list-group-item" data-bs-toggle="modal" data-bs-target="#detalleReseñaModal" data-id="2">
+                        <h6>Guía: María López</h6>
+                        <p>Puntuación: <span class="stars">⭐⭐⭐⭐</span></p>
+                        <p>Comentario: "Muy buena actividad, aunque la ruta podría mejorar."</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para mostrar detalles de la reseña -->
+<div class="modal fade" id="detalleReseñaModal" tabindex="-1" aria-labelledby="detalleReseñaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detalleReseñaModalLabel">Detalles de la Reseña</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Descripción de la vivencia:</strong> <span id="descripcion-vivencia"></span></p>
+                <p><strong>Contacto del guía:</strong> <span id="contacto"></span></p>
+                <p><strong>Puntuación:</strong> <span id="puntuacion"></span></p>
+                <p><strong>Fecha:</strong> <span id="fecha"></span></p>
+                <p><strong>Comentario del usuario:</strong> <span id="comentario"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="escribirReseñaModal" tabindex="-1" aria-labelledby="escribirReseñaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="escribirReseñaModalLabel">Escribir Reseña</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formReseña">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Tu Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="reseña" class="form-label">Escribe tu Reseña</label>
+                        <textarea class="form-control" id="reseña" name="reseña" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Puntuación</label>
+                        <div id="estrellas">
+                            <!-- Estrellas para puntuación -->
+                            <span class="star" data-value="1">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="5">★</span>
+                        </div>
+                        <input type="hidden" id="puntuacion" name="puntuacion" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Enviar Reseña</button>
+                </form>
+                <div id="mensajeExitoReseña" class="alert alert-success mt-2" style="display:none;">
+                    ¡Reseña enviada con éxito!
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

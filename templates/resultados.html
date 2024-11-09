@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="text-center">Resultados de la búsqueda para "{{ query }}"</h3>
+    <hr>
+
+    <div class="row">
+        {% if actividades %}
+            {% for actividad in actividades %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="{{ actividad['Imagen URL'] }}" class="card-img-top" alt="Imagen de actividad">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ actividad['Nombre del Guía'] }}</h5>
+                            <p class="card-text">
+                                <strong>Actividad:</strong> {{ actividad['Actividad que ofrece'] }} <br>
+                                <strong>Descripción:</strong> {{ actividad['Descripción de la Actividad'] }} <br>
+                                <strong>Teléfono:</strong> {{ actividad['Teléfono de Contacto'] }} <br>
+                                <strong>Precio:</strong> S/ {{ actividad['Precio en Soles'] }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <p class="text-center">No se encontraron resultados para "{{ query }}"</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script>
+        L_NO_TOUCH = false;
+        L_DISABLE_3D = false;
+    </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <style>
+        #map_3ed2bf8b382422396823f49a54edc86d {
+            position: relative;
+            width: 100.0%;
+            height: 100.0%;
+            left: 0.0%;
+            top: 0.0%;
+        }
+        .leaflet-container { font-size: 1rem; }
+
+        /* Estilo para el contenedor emergente */
+        .overlay-container {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 800px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ccc;
+            padding: 20px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+        }
+
+        /* Estilo para el botón de cierre */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="folium-map" id="map_3ed2bf8b382422396823f49a54edc86d"></div>
+
+    <!-- Contenedor emergente -->
+    <div id="overlay" class="overlay-container">
+        <button id="close-btn" class="close-btn">X</button>
+        <div id="overlay-content">
+            <!-- El contenido del contenedor se mostrará aquí -->
+            <h3>Información de la región</h3>
+            <p>Aquí se puede mostrar la información relevante.</p>
+        </div>
+    </div>
+
+    <script>
+        var map_3ed2bf8b382422396823f49a54edc86d = L.map("map_3ed2bf8b382422396823f49a54edc86d", {
+            center: [-9.19, -75.0152],
+            crs: L.CRS.EPSG3857,
+            zoom: 5,
+            zoomControl: true,
+            preferCanvas: false,
+        });
+
+        var tile_layer_9dc694e2be51613984bf40e80368cea4 = L.tileLayer(
+            "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+                "detectRetina": false,
+                "maxNativeZoom": 19,
+                "maxZoom": 19,
+                "minZoom": 0,
+                "noWrap": false,
+                "opacity": 1,
+                "subdomains": "abc",
+                "tms": false
+            }
+        );
+        tile_layer_9dc694e2be51613984bf40e80368cea4.addTo(map_3ed2bf8b382422396823f49a54edc86d);
+
+        // Cargar el CSV
+        var actividadesData = [];
+        Papa.parse("../static/images/Data regiones.csv", {
+            download: true,
+            header: true,
+            complete: function(results) {
+                actividadesData = results.data;
+            }
+        });
+
+        // Se añaden los marcadores con un clic que hará zoom en el mapa
+        var coordenadas_ciudades = {
+            'AMAZONAS': [-6.2315, -77.8690],
+            'ÁNCASH': [-9.5298, -77.5299],
+            'APURÍMAC': [-13.6355, -72.8816],
+            'AREQUIPA': [-16.4090, -71.5375],
+            'AYACUCHO': [-13.1588, -74.2236],
+            'CAJAMARCA': [-7.1638, -78.5003],
+            'CALLAO': [-12.0553, -77.1188],
+            'CUSCO': [-13.5319, -71.9675],
+            'HUANCAVELICA': [-12.7877, -74.9734],
+            'HUÁNUCO': [-9.9306, -76.2422],
+            'ICA': [-14.0678, -75.7286],
+            'JUNÍN': [-11.5410, -74.8770],
+            'LA LIBERTAD': [-8.1150, -79.0285],
+            'LAMBAYEQUE': [-6.7766, -79.8446],
+            'LIMA': [-12.0464, -77.0428],
+            'LORETO': [-3.7491, -73.2538],
+            'MADRE DE DIOS': [-12.5933, -69.1890],
+            'MOQUEGUA': [-17.1983, -70.9357],
+            'PASCO': [-10.4069, -76.5155],
+            'PIURA': [-5.1945, -80.6328],
+            'PUNO': [-15.8402, -70.0219],
+            'SAN MARTÍN': [-6.4851, -76.3690],
+            'TACNA': [-18.0146, -70.2530],
+            'TUMBES': [-3.5669, -80.4515],
+            'UCAYALI': [-8.3791, -74.5539]
+        };
+
+        // Cambiar el icono por una imagen PNG y ajustar el tamaño
+        var iconoImagen = L.icon({
+            iconUrl: 'static/images/marcador-de-posicion.png', // Reemplaza con la ruta de tu imagen PNG
+            iconSize: [30, 30],  // Ajusta el tamaño de la imagen (puedes cambiar estos valores)
+            iconAnchor: [18, 18],  // Alineación del icono respecto a su posición
+        });
+
+// Crear un marcador en cada ciudad
+for (var ciudad in coordenadas_ciudades) {
+    var coord = coordenadas_ciudades[ciudad];
+    var marker = L.marker(coord, {
+        icon: iconoImagen
+    }).addTo(map_3ed2bf8b382422396823f49a54edc86d);
+    
+    // Configurar el evento de clic para hacer zoom en el marcador
+    marker.on('click', function() {
+        map_3ed2bf8b382422396823f49a54edc86d.setView(this.getLatLng(), 10);  // Ajusta el nivel de zoom
+
+        // Filtrar las actividades basadas en la región de la ciudad
+        var ciudadSeleccionada = this.getLatLng();
+
+        // Convertir el nombre de la ciudad en la coordenada a mayúsculas para evitar problemas de mayúsculas/minúsculas
+        var ciudadNombre = this._latlng.toString().toUpperCase();
+
+        // Filtrar las actividades basadas en el nombre de la región (reemplazamos por la clave correcta)
+        var actividades = actividadesData.filter(function(item) {
+            // Aseguramos que la propiedad 'REGIÓN' existe
+            if (item.REGIÓN) {
+                return item.REGIÓN.toUpperCase() === ciudad.toUpperCase(); // Comparar en mayúsculas
+            }
+            return false; // Si no existe la propiedad 'REGIÓN', no se incluye
+        });
+
+        // Generar las tarjetas con la información
+        var contenidoHTML = "<h3>Información de " + ciudad + "</h3>";
+
+        actividades.forEach(function(actividad) {
+            contenidoHTML += `
+                <div class="card mb-3">
+                    <img src="${actividad['Imagen URL']}" class="card-img-top" alt="Imagen de la actividad">
+                    <div class="card-body">
+                        <h5 class="card-title">${actividad['Actividad que ofrece']}</h5>
+                        <p class="card-text">${actividad['Descripción de la Actividad']}</p>
+                        <p><strong>Teléfono:</strong> ${actividad['Teléfono de Contacto']}</p>
+                        <p><strong>Precio:</strong> S/${actividad['Precio en Soles']}</p>
+                    </div>
+                </div>
+            `;
+        });
+
+        $('#overlay').fadeIn();
+        $('#overlay-content').html(contenidoHTML);
+    });
+}
+
+// Cerrar el contenedor emergente al hacer clic en la "x"
+$('#close-btn').click(function() {
+    $('#overlay').fadeOut();
+});
+
+
+        // Cerrar el contenedor emergente al hacer clic en la "x"
+        $('#close-btn').click(function() {
+            $('#overlay').fadeOut();
+        });
+    </script>
+</body>
+</html>
